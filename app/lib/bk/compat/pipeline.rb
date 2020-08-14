@@ -69,6 +69,25 @@ module BK
         end
       end
 
+      class BlockStep
+        attr_accessor :label, :type, :key, :prompt, :fields, :branches, :depends_on
+
+        def initialize(label: nil, key: nil, prompt: nil, fields: [], depends_on: nil)
+          @label = label
+          @prompt = prompt
+          @key = key
+          @fields = fields
+          @depends_on = depends_on
+        end
+
+        def to_h
+          { label: @label, type: 'block', key: @key, prompt: @prompt }.tap do |h|
+            h[:depends_on] = @depends_on if @depends_on
+            h[:fields] = @fields.map(&:to_h) if @fields && !@fields.empty?
+          end
+        end
+      end
+
       class GroupStep
         attr_accessor :label, :key, :steps, :conditional
 
