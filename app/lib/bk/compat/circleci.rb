@@ -61,7 +61,11 @@ module BK
                 steps_by_key.fetch(j)
               when Hash
                 key = j.keys.first
-                step = steps_by_key.fetch(key).dup
+                if j[key]['type'] == "approval"
+                  step = BK::Compat::Pipeline::BlockStep.new(key: key, label: ":circleci: #{key}", prompt: key)
+                else
+                  step = steps_by_key.fetch(key).dup
+                end
 
                 if requires = j[key]["requires"]
                   step.depends_on = [*requires]
